@@ -7,7 +7,70 @@ use std::time::Duration;
 
 use futures::stream;
 use futures::stream::Stream;
-use gloo::timers::callback::Timeout;
+
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_name = "setTimeout", catch)]
+    fn set_timeout(handler: &js_sys::Function, timeout: i32) -> Result<JsValue, JsValue>;
+
+    #[wasm_bindgen(js_name = "clearTimeout")]
+    fn clear_timeout(handle: JsValue) -> JsValue;
+}
+
+#[derive(Debug)]
+#[must_use = "timeouts cancel on drop; either call `forget` or `drop` explicitly"]
+struct Timeout {
+    id: Option<JsValue>,
+    closure: Option<Closure<dyn FnMut()>>,
+}
+
+impl Drop for Timeout {
+    /// Disposes of the timeout, dually cancelling this timeout by calling
+    /// `clearTimeout` directly.
+    fn drop(&mut self) {
+        if let Some(id) = self.id.take() {
+            clear_timeout(id);
+        }
+    }
+}
+
+impl Timeout {
+    /// Schedule a timeout to invoke `callback` in `millis` milliseconds from
+    /// now.
+    fn new<F>(millis: u32, callback: F) -> Timeout
+    where
+        F: 'static + FnOnce(),
+    {
+        let closure = Closure::once(callback);
+
+        let id = set_timeout(
+            closure.as_ref().unchecked_ref::<js_sys::Function>(),
+            millis as i32,
+        ).unwrap_throw();
+
+        Timeout {
+            id: Some(id),
+            closure: Some(closure),
+        }
+    }
+
+    /// Forgets this resource without clearing the timeout.
+    #[allow(dead_code)]
+    fn forget(mut self) -> JsValue {
+        let id = self.id.take().unwrap_throw();
+        self.closure.take().unwrap_throw().forget();
+        id
+    }
+
+    /// Cancel this timeout so that the callback is not invoked after the time
+    /// is up.
+    #[allow(dead_code)]
+    fn cancel(mut self) -> Closure<dyn FnMut()> {
+        self.closure.take().unwrap_throw()
+    }
+}
 
 #[inline(always)]
 pub(crate) fn sleep(dur: Duration) -> impl Future<Output = ()> {
