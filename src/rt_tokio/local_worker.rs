@@ -7,7 +7,6 @@
 //! unwinding.
 
 use std::cell::RefCell;
-use std::future::Future;
 use std::marker::PhantomData;
 use std::sync::Arc;
 use std::{io, thread};
@@ -18,12 +17,12 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use futures::channel::mpsc::UnboundedSender;
 use futures::stream::StreamExt;
-use tokio::task::{spawn_local, LocalSet};
+use tokio::task::{LocalSet, spawn_local};
 
 type SpawnTask = Box<dyn Send + FnOnce()>;
 
 thread_local! {
-    static TASK_COUNT: RefCell<Option<Arc<AtomicUsize>>> = RefCell::new(None);
+    static TASK_COUNT: RefCell<Option<Arc<AtomicUsize>>> = const { RefCell::new(None) };
     static LOCAL_SET: LocalSet = LocalSet::new();
 }
 

@@ -42,14 +42,8 @@
 //! - `wasm-bindgen-futures` (WebAssembly targets)
 //! - `tokio` (non-WebAssembly targets)
 
-#![cfg_attr(documenting, feature(doc_cfg))]
-#![deny(
-    missing_docs,
-    missing_debug_implementations,
-    bare_trait_objects,
-    anonymous_parameters,
-    elided_lifetimes_in_paths
-)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![deny(missing_docs, missing_debug_implementations, elided_lifetimes_in_paths)]
 
 pub mod fmt;
 pub mod pinned;

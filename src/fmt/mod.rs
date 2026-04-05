@@ -1,15 +1,13 @@
 //! Asynchronous utilities to work with `String`s.
 
-use std::future::Future;
-
+use futures::StreamExt;
 use futures::future::{self, MaybeDone};
 use futures::stream::{FusedStream, Stream};
-use futures::StreamExt;
 use pin_project::pin_project;
 
 mod buffer;
 
-pub use buffer::{buffer, BufReader, BufWriter};
+pub use buffer::{BufReader, BufWriter, buffer};
 
 /// A buffered asynchronous [`String`] [`Stream`](futures::stream::Stream).
 ///

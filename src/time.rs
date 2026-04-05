@@ -1,6 +1,5 @@
 //! Utilities for bridging time and tasks.
 
-use std::future::Future;
 use std::time::Duration;
 
 use futures::stream::Stream;

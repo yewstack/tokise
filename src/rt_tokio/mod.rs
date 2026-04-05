@@ -1,8 +1,5 @@
-use std::future::Future;
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock};
 use std::{fmt, io};
-
-use once_cell::sync::Lazy;
 
 pub(crate) mod time;
 
@@ -56,7 +53,7 @@ impl fmt::Debug for Runtime {
 
 impl Default for Runtime {
     fn default() -> Self {
-        static DEFAULT_RT: Lazy<Runtime> = Lazy::new(|| {
+        static DEFAULT_RT: LazyLock<Runtime> = LazyLock::new(|| {
             Runtime::new(get_default_runtime_size()).expect("failed to create runtime.")
         });
 

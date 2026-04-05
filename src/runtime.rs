@@ -1,4 +1,3 @@
-use std::future::Future;
 use std::io::Result;
 use std::marker::PhantomData;
 

@@ -2,14 +2,14 @@
 name = "tokise"
 version = "0.2.1"
 authors = ["Kaede Hoshikawa <futursolo@icloud.com>", "Elina <imelina@elina.website>"]
-edition = "2021"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["yew", "futures", "async", "io"]
 categories = ["asynchronous"]
 description = "An asynchronous runtime compatible with WebAssembly and non-WebAssembly targets."
 repository = "https://github.com/yewstack/tokise"
-rust-version = "1.60.0"
+rust-version = "1.85"
 
 [dependencies]
 futures = { version = "0.3", default-features = false, features = [
@@ -18,7 +18,6 @@ futures = { version = "0.3", default-features = false, features = [
 ] }
 pin-project = "1.0.11"
 pinned = "0.1.0"
-once_cell = "1"
 
 [target.'cfg(all(target_arch = "wasm32", not(target_os = "wasi")))'.dependencies]
 wasm-bindgen-futures = { version = "0.4" }
@@ -39,4 +38,4 @@ default = []
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = ["--cfg", "documenting"]
+rustdoc-args = ["--cfg", "docsrs"]
