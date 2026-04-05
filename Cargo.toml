@@ -1,6 +1,6 @@
 [package]
 name = "tokise"
-version = "0.2.1"
+version = "0.3.0"
 authors = ["Kaede Hoshikawa <futursolo@icloud.com>", "Elina <imelina@elina.website>"]
 edition = "2024"
 license = "MIT OR Apache-2.0"
